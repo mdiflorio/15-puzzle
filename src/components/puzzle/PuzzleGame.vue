@@ -62,6 +62,7 @@ export default class PuzzleGame extends Vue {
     }
   }
 
+  // Get the indexes of the tiles that can be moved into the empty spot
   possibleMoves() {
     const emptyTilePos = this.emptyTilePos;
 
