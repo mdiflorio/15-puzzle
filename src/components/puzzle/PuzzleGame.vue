@@ -31,6 +31,7 @@ export default class PuzzleGame extends Vue {
       this.boardState.push(i);
       this.boardObjective.push(i);
     }
+    this.scrambleBoard();
   }
 
   moveTile(tileIndex: number) {
@@ -67,10 +68,13 @@ export default class PuzzleGame extends Vue {
     return moves.filter(index => index >= 0 && index <= this.boardLength);
   }
 
-  // scrambleBoard() {
-  //
-  // }
-  //
+  scrambleBoard() {
+    this.boardState = this.boardState
+      .map(a => ({ sort: Math.random(), value: a }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(a => a.value);
+  }
+
   // checkHasWon() {
   //
   // }
