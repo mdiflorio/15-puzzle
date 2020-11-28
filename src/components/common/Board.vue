@@ -1,6 +1,12 @@
 <template>
   <div class="board" :style="style">
-    <Tile v-for="tile in tiles" :key="tile" :text="tile" :tile-hidden="false" />
+    <Tile
+      v-for="(tile, index) in tiles"
+      :key="tile"
+      :text="tile"
+      :tile-hidden="tile === tiles.length - 1"
+      :grid-pos="calculateTilePos(index)"
+    />
   </div>
 </template>
 
@@ -24,6 +30,12 @@ export default class Board extends Vue {
       // Variable used in css
       "--col-size": this.colSize
     };
+  }
+
+  calculateTilePos(tileIndex: number): string {
+    const col = tileIndex / this.colSize;
+    const row = tileIndex % this.colSize;
+    return `${col} / ${row}`;
   }
 }
 </script>

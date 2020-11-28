@@ -1,5 +1,10 @@
 <template>
-  <button class="tile" :hidden="tileHidden" :disabled="tileHidden">
+  <button
+    class="tile"
+    :style="style"
+    :class="{ 'tile-hidden': tileHidden }"
+    :disabled="tileHidden"
+  >
     {{ text }}
   </button>
 </template>
@@ -14,11 +19,22 @@ export default class Tile extends Vue {
 
   @Prop({ type: Boolean })
   private tileHidden!: boolean;
+
+  @Prop({ type: String })
+  gridPos!: string;
+
+  get style() {
+    return {
+      "--grid-pos": this.gridPos
+    };
+  }
 }
 </script>
 
 <style scoped lang="scss">
 .tile {
+  grid-column: var(--grid-pos);
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,5 +43,9 @@ export default class Tile extends Vue {
   height: 10rem;
   margin: 0.1em;
   font-size: 2rem;
+
+  &-hidden {
+    visibility: hidden;
+  }
 }
 </style>
