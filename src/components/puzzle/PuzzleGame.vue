@@ -73,6 +73,10 @@ export default class PuzzleGame extends Vue {
       .map(a => ({ sort: Math.random(), value: a }))
       .sort((a, b) => a.sort - b.sort)
       .map(a => a.value);
+
+    this.emptyTilePos = this.boardState.findIndex(
+      tile => tile === this.boardLength - 1
+    );
   }
 
   // checkHasWon() {
