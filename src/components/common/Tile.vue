@@ -4,6 +4,8 @@
     :style="style"
     :class="{ 'tile-hidden': tileHidden }"
     :disabled="tileHidden"
+    :index="index"
+    @click="handleClick"
   >
     {{ text }}
   </button>
@@ -23,10 +25,17 @@ export default class Tile extends Vue {
   @Prop({ type: String })
   gridPos!: string;
 
+  @Prop({ type: Number, default: 0 })
+  index!: number;
+
   get style() {
     return {
       "--grid-pos": this.gridPos
     };
+  }
+
+  handleClick() {
+    this.$emit("click", this.index);
   }
 }
 </script>

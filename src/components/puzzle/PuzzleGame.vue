@@ -1,5 +1,5 @@
 <template>
-  <Board :tiles="boardState" :col-size="colSize" />
+  <Board :tiles="boardState" :col-size="colSize" @move-tile="moveTile" />
 </template>
 
 <script lang="ts">
@@ -18,9 +18,11 @@ export default class PuzzleGame extends Vue {
 
   boardObjective: PuzzleTiles = [];
   boardState: PuzzleTiles = [];
+  emptyTilePos!: number;
 
   created() {
     this.boardLength = this.colSize * this.colSize;
+    this.emptyTilePos = this.colSize * this.colSize - 1;
     this.initBoards();
   }
 
@@ -30,6 +32,48 @@ export default class PuzzleGame extends Vue {
       this.boardObjective.push(i);
     }
   }
+
+  moveTile(tileIndex: number) {
+    const canMove = this.possibleMoves().includes(tileIndex);
+
+    if (canMove) {
+      const tileNumber = this.boardState[tileIndex];
+
+      // Swap the tile with the empty spot
+      Vue.set(this.boardState, this.emptyTilePos, tileNumber);
+      Vue.set(this.boardState, tileIndex, this.boardLength - 1);
+
+      this.emptyTilePos = tileIndex;
+    }
+  }
+
+  possibleMoves() {
+    const emptyTilePos = this.emptyTilePos;
+
+    // Get index of tiles around the empty tile
+    const aboveEmptyTile = emptyTilePos - this.colSize;
+    const belowEmptyTile = emptyTilePos + this.colSize;
+    const leftEmptyTile = emptyTilePos - 1;
+    const rightEmptyTile = emptyTilePos + 1;
+
+    const moves = [
+      aboveEmptyTile,
+      belowEmptyTile,
+      leftEmptyTile,
+      rightEmptyTile
+    ];
+
+    // Remove all indexes that are out of the board
+    return moves.filter(index => index >= 0 && index <= this.boardLength);
+  }
+
+  // scrambleBoard() {
+  //
+  // }
+  //
+  // checkHasWon() {
+  //
+  // }
 }
 </script>
 

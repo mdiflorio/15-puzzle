@@ -5,7 +5,9 @@
       :key="tile"
       :text="tile"
       :tile-hidden="tile === tiles.length - 1"
+      :index="index"
       :grid-pos="calculateTilePos(index)"
+      @click="handleTileClick"
     />
   </div>
 </template>
@@ -36,6 +38,10 @@ export default class Board extends Vue {
     const col = tileIndex / this.colSize;
     const row = tileIndex % this.colSize;
     return `${col} / ${row}`;
+  }
+
+  handleTileClick(tileIndex: number) {
+    this.$emit("move-tile", tileIndex);
   }
 }
 </script>
