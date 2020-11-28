@@ -25,9 +25,5 @@ export default class App extends Vue {}
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 </style>

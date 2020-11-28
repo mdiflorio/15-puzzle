@@ -1,23 +1,33 @@
 <template>
-  <Board :tiles="boardState" :col-size="colSize" @move-tile="moveTile" />
+  <div class="puzzle_game">
+    <Banner v-if="hasWon" text="Congradulations you've won!" />
+    <div class="btn_container">
+      <CommonButton text="Reset" @click="resetBoards" />
+      <CommonButton text="Scramble board" @click="scrambleBoard" />
+    </div>
+    <Board :tiles="boardState" :col-size="colSize" @move-tile="moveTile" />
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { PuzzleTiles } from "@/app.types";
 import Board from "@/components/common/Board.vue";
+import Banner from "@/components/common/Banner.vue";
+import CommonButton from "@/components/common/CommonButton.vue";
 
 @Component({
-  components: { Board }
+  components: { Board, Banner, CommonButton }
 })
 export default class PuzzleGame extends Vue {
   @Prop({ default: 3, type: Number })
   private colSize!: number;
 
   boardLength!: number;
-
   boardObjective: PuzzleTiles = [];
   boardState: PuzzleTiles = [];
+
+  hasWon = false;
   emptyTilePos!: number;
 
   created() {
@@ -31,9 +41,17 @@ export default class PuzzleGame extends Vue {
       this.boardState.push(i);
       this.boardObjective.push(i);
     }
-    this.scrambleBoard();
   }
 
+  // Reset the boards to the original position
+  resetBoards() {
+    this.boardState = [];
+    this.boardObjective = [];
+    this.initBoards();
+    this.setEmptyTilePos();
+  }
+
+  // Move tile into the empty spot
   moveTile(tileIndex: number) {
     const canMove = this.possibleMoves().includes(tileIndex);
 
@@ -45,13 +63,14 @@ export default class PuzzleGame extends Vue {
       Vue.set(this.boardState, tileIndex, this.boardLength - 1);
 
       this.emptyTilePos = tileIndex;
+      this.hasWon = this.checkHasWon();
     }
   }
 
   possibleMoves() {
     const emptyTilePos = this.emptyTilePos;
 
-    // Get index of tiles around the empty tile
+    // Get index of the tiles around the empty tile
     const aboveEmptyTile = emptyTilePos - this.colSize;
     const belowEmptyTile = emptyTilePos + this.colSize;
     const leftEmptyTile = emptyTilePos - 1;
@@ -68,21 +87,47 @@ export default class PuzzleGame extends Vue {
     return moves.filter(index => index >= 0 && index <= this.boardLength);
   }
 
+  // Scramble the board state.
   scrambleBoard() {
+    // Randomise the array
     this.boardState = this.boardState
       .map(a => ({ sort: Math.random(), value: a }))
       .sort((a, b) => a.sort - b.sort)
       .map(a => a.value);
 
+    this.setEmptyTilePos();
+  }
+
+  // Check the board state against the board objective
+  checkHasWon(): boolean {
+    for (let i = 0; i < this.boardLength; i++) {
+      if (this.boardState[i] !== this.boardObjective[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Find the empty tile position
+  setEmptyTilePos() {
     this.emptyTilePos = this.boardState.findIndex(
       tile => tile === this.boardLength - 1
     );
   }
-
-  // checkHasWon() {
-  //
-  // }
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.puzzle_game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .btn_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+</style>
