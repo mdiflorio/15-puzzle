@@ -2,7 +2,7 @@
   <div class="puzzle_game">
     <Banner v-if="hasWon" text="Congradulations you've won!" />
     <div class="btn_container">
-      <CommonButton text="Reset" @click="resetBoards" />
+      <CommonButton text="Reset" @click="initBoards" />
       <CommonButton text="Scramble board" @click="scrambleBoard" />
     </div>
     <Board :tiles="boardState" :col-size="colSize" @move-tile="moveTile" />
@@ -32,22 +32,17 @@ export default class PuzzleGame extends Vue {
 
   created() {
     this.boardLength = this.colSize * this.colSize;
-    this.emptyTilePos = this.colSize * this.colSize - 1;
     this.initBoards();
   }
 
+  // Initialise the boards to their starting state
   initBoards() {
+    this.boardState = [];
+    this.boardObjective = [];
     for (let i = 0; i < this.boardLength; i++) {
       this.boardState.push(i);
       this.boardObjective.push(i);
     }
-  }
-
-  // Reset the boards to the original position
-  resetBoards() {
-    this.boardState = [];
-    this.boardObjective = [];
-    this.initBoards();
     this.setEmptyTilePos();
   }
 

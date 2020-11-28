@@ -34,6 +34,7 @@ export default class Board extends Vue {
     };
   }
 
+  // Calculate the tile position based on the index
   calculateTilePos(tileIndex: number): string {
     const col = tileIndex / this.colSize;
     const row = tileIndex % this.colSize;
