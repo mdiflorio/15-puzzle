@@ -1,5 +1,7 @@
 <template>
-  <div class="board"></div>
+  <button class="tile" :hidden="tileHidden" :disabled="tileHidden">
+    {{ text }}
+  </button>
 </template>
 
 <script lang="ts">
@@ -7,14 +9,23 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class Tile extends Vue {
-  @Prop() private msg!: string;
+  @Prop({ type: [String, Number] })
+  private text!: string | number;
+
+  @Prop({ type: Boolean })
+  private tileHidden!: boolean;
 }
 </script>
 
 <style scoped lang="scss">
 .tile {
-  &--hidden {
-    visibility: hidden;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: gray;
+
+  height: 10rem;
+  margin: 0.1em;
+  font-size: 2rem;
 }
 </style>

@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <PuzzleGame :col-size="3" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import HelloWorld from "./components/puzzle/PuzzleGame.vue";
+import PuzzleGame from "@/components/puzzle/PuzzleGame.vue";
 
 @Component({
   components: {
-    HelloWorld
+    PuzzleGame
   }
 })
 export default class App extends Vue {}
@@ -25,5 +25,9 @@ export default class App extends Vue {}
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
